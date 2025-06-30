@@ -3,6 +3,7 @@
 #include <fstream>
 #include "md5.h"
 #include <iomanip>
+
 using namespace std;
 using namespace chrono;
 
@@ -12,7 +13,9 @@ const int SIMD_BATCH = 4; // 使用4路并行
 // g++ main.cpp train.cpp guessing.cpp md5.cpp -o main
 // g++ main.cpp train.cpp guessing.cpp md5.cpp -o main -O1
 // g++ main.cpp train.cpp guessing.cpp md5.cpp -o main -O2
-
+// g++ main.cpp train.cpp guessing_MP.cpp md5.cpp -fopenmp -o main
+// g++ main.cpp train.cpp guessing_MP.cpp md5.cpp -fopenmp -o main -O2
+// g++ main.cpp train.cpp guessing.cpp md5.cpp -pthread -o main -O2
 int main()
 {
     double time_hash = 0;  // 用于MD5哈希的时间
@@ -43,8 +46,8 @@ int main()
             curr_num = q.total_guesses;
 
             // 在此处更改实验生成的猜测上限
-            int generate_n=10000000;
-            if (history + q.total_guesses > 10000000)
+            int generate_n=100000;
+            if (history + q.total_guesses > generate_n)
             {
                 auto end = system_clock::now();
                 auto duration = duration_cast<microseconds>(end - start);
